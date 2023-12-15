@@ -1,110 +1,71 @@
 ﻿using System;
-using System.Collections.Generic;
 
-// Абстрактний клас Vehicle
-public abstract class Vehicle
+public class MathOperations
 {
-    public int Speed { get; set; }
-    public int Capacity { get; set; }
-
-    public abstract void Move();
-}
-
-// Клас Human
-public class Human
-{
-    public int Speed { get; set; }
-
-    public void Move()
+   
+    public static T Add<T>(T a, T b)
     {
-        Console.WriteLine("Human is moving.");
-    }
-}
-
-// Спадкоємці: Car, Bus, Train
-public class Car : Vehicle
-{
-    public override void Move()
-    {
-        Console.WriteLine("Car is moving.");
-    }
-}
-
-public class Bus : Vehicle
-{
-    public override void Move()
-    {
-        Console.WriteLine("Bus is moving.");
-    }
-}
-
-public class Train : Vehicle
-{
-    public override void Move()
-    {
-        Console.WriteLine("Train is moving.");
-    }
-}
-
-// Клас Route
-public class Route
-{
-    public string StartPoint { get; set; }
-    public string EndPoint { get; set; }
-}
-
-// Клас TransportNetwork
-public class TransportNetwork
-{
-    private List<Vehicle> vehicles;
-
-    public TransportNetwork()
-    {
-        vehicles = new List<Vehicle>();
+        dynamic dynamicA = a;
+        dynamic dynamicB = b;
+        return dynamicA + dynamicB;
     }
 
-    public void AddVehicle(Vehicle vehicle)
+л
+    public static T[] Add<T>(T[] a, T[] b)
     {
-        vehicles.Add(vehicle);
-    }
+        if (a.Length != b.Length)
+            throw new ArgumentException("Arrays must have the same length.");
 
-    public void ControlMovement()
-    {
-        foreach (var vehicle in vehicles)
+        T[] result = new T[a.Length];
+        for (int i = 0; i < a.Length; i++)
         {
-            vehicle.Move();
+            result[i] = Add(a[i], b[i]);
         }
+        return result;
     }
 
-    public string CalculateOptimalRoute(Route route, Vehicle vehicle)
+ 
+    public static T[,] Add<T>(T[,] matrixA, T[,] matrixB)
     {
-        return $"Optimal route from {route.StartPoint} to {route.EndPoint} for {vehicle.GetType().Name}";
+        int rows = matrixA.GetLength(0);
+        int columns = matrixA.GetLength(1);
+
+        if (rows != matrixB.GetLength(0) || columns != matrixB.GetLength(1))
+            throw new ArgumentException("Matrices must have the same dimensions.");
+
+        T[,] result = new T[rows, columns];
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                result[i, j] = Add(matrixA[i, j], matrixB[i, j]);
+            }
+        }
+        return result;
     }
 
-    public void PassengerHandling(Vehicle vehicle, int passengers)
+   
+    public static void Main()
     {
-        Console.WriteLine($"Handling {passengers} passengers for {vehicle.GetType().Name}");
-    }
-}
+        int a = 5, b = 10;
+        Console.WriteLine($"Addition of {a} and {b}: {Add(a, b)}");
 
-class Program
-{
-    static void Main()
-    {
-        Car car = new Car();
-        Bus bus = new Bus();
-        Train train = new Train();
+        double[] arrayA = { 1.5, 2.5, 3.5 };
+        double[] arrayB = { 0.5, 1.5, 2.5 };
+        Console.WriteLine($"Array Addition: [{string.Join(", ", Add(arrayA, arrayB))}]");
 
-        TransportNetwork transportNetwork = new TransportNetwork();
-        transportNetwork.AddVehicle(car);
-        transportNetwork.AddVehicle(bus);
-        transportNetwork.AddVehicle(train);
+        int[,] matrixA = { { 1, 2 }, { 3, 4 } };
+        int[,] matrixB = { { 5, 6 }, { 7, 8 } };
+        var resultMatrix = Add(matrixA, matrixB);
 
-        transportNetwork.ControlMovement();
-
-        Route route = new Route { StartPoint = "A", EndPoint = "B" };
-        Console.WriteLine(transportNetwork.CalculateOptimalRoute(route, car));
-
-        transportNetwork.PassengerHandling(bus, 30);
+        Console.WriteLine("Matrix Addition:");
+        for (int i = 0; i < resultMatrix.GetLength(0); i++)
+        {
+            for (int j = 0; j < resultMatrix.GetLength(1); j++)
+            {
+                Console.Write(resultMatrix[i, j] + " ");
+            }
+            Console.WriteLine();
+        }
     }
 }
